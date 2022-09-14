@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lab1</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="shortcut icon" href="img/lab-logo.png">
+</head>
+<body>
+    <table class="main-table">
+        <tr>
+            <td class="mtd header">
+                <div class="description">
+                    <label>Погрибняк Иван Сергеевич, P32131</label> <br> <label>Вариант 913</label>
+                </div>
+            </td>
+            <td rowspan="3" class="mtd results">
+                <div class="description">
+                    <h2>Таблица результатов</h2>
+                </div>
+                <div class="result-container">
+                    <table class="result">
+                        <tr>
+                            <th>Текущее время</th>
+                            <th>Время работы скрипта</th>
+                            <th>X</th>
+                            <th>Y</th>
+                            <th>R</th>
+                            <th>Результат</th>
+                        </tr>
+                        <tbody id="result-table"></tbody>
+                    </table>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="mtd graphics">
+                <div class="description">
+                    <h2>График</h2>
+                </div>
+                <div class="graph-block">
+                    <canvas id="canvas" width="300" height="300"></canvas><br>
+                    <label id="canvas-label">Точка вне canvas'а</label>
+                </div> 
+            </td>
+            
+        </tr>
+        <tr>
+            <td class="mtd interactive">
+                <div class="description">
+                    <h2>Меню</h2>
+                </div>
+                <form class="form" name="form">
+                    <table class="form-table">
+                        <tr><td class="form-text x-text" colspan="9"><div class="x-text1">Значение x</div></td></tr>
+                        <tr class="x-value-row">
+                            
+                            <td><button class="form-button x-button" value="-4">-4</button></td>
+                            <td><button class="form-button x-button" value="-3">-3</button></td>
+                            <td><button class="form-button x-button" value="-2">-2</button></td>
+                            <td><button class="form-button x-button" value="-1">-1</button></td>
+                            <td><button class="form-button x-button" value="0">0</button></td>
+                            <td><button class="form-button x-button" value="1">1</button></td>
+                            <td><button class="form-button x-button" value="2">2</button></td>
+                            <td><button class="form-button x-button" value="3">3</button></td>
+                            <td><button class="form-button x-button" value="4">4</button></td>
+                        </tr>
+                        <tr><td class="form-text y-text" colspan="9">Значение y</td></tr>
+                        <tr class="y-value-row">
+                            
+                            
+                            <td colspan="3">
+                                <input class="form-input y-input" placeholder="(-5 ... 3)">
+                            </td>
+                        </tr>
+                        <tr><td class="form-text r-text" colspan="9">Значение R</td></tr>
+                        <tr class="r-value-row">
+                            
+    
+                            <td><button class="form-button r-button" value="1">1</button></td>
+                            <td><button class="form-button r-button" value="1.5">1.5</button></td>
+                            <td><button class="form-button r-button" value="2">2</button></td>
+                            <td><button class="form-button r-button" value="2.5">2.5</button></td>
+                            <td><button class="form-button r-button" value="3">3</button></td>
+                        </tr>
+                        <tr>
+                            
+                            <td colspan="5">
+                                <button type="submit" class="form-submit">Проверить</button>
+                            </td>
+                            <td colspan="5">
+                                <button class="clear">Сброс таблицы</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="10" id="text-error"></td>
+                        </tr>
+                    </table>
+                </form> 
+            </td>
+        </tr>
+    </table>
+    <script src="js/script.js"></script>
+</body>
+</html>
