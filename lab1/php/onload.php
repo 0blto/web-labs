@@ -1,6 +1,8 @@
 <?php
 session_start();
+
 if (!isset($_SESSION['table'])) {
+    $_SESSION = array();
     $_SESSION['table'] = array();
     echo '';
 } else {

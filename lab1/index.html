@@ -6,13 +6,14 @@
     <title>lab1</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="shortcut icon" href="img/lab-logo.png">
+    <link rel="stylesheet" href="css/tool.css">
 </head>
 <body>
     <table class="main-table">
         <tr>
             <td class="mtd header">
                 <div class="description">
-                    <label>Погрибняк Иван Сергеевич, P32131</label> <br> <label>Вариант 913</label>
+                    Погрибняк Иван Сергеевич, P32131 <br> Вариант 913
                 </div>
             </td>
             <td rowspan="3" class="mtd results">
@@ -24,9 +25,9 @@
                         <tr>
                             <th>Текущее время</th>
                             <th>Время работы скрипта</th>
-                            <th>X</th>
-                            <th>Y</th>
-                            <th>R</th>
+                            <th class="col">X</th>
+                            <th class="col">Y</th>
+                            <th class="col">R</th>
                             <th>Результат</th>
                         </tr>
                         <tbody id="result-table"></tbody>
@@ -40,8 +41,8 @@
                     <h2>График</h2>
                 </div>
                 <div class="graph-block">
-                    <canvas id="canvas" width="300" height="300"></canvas><br>
-                    <label id="canvas-label">Точка вне canvas'а</label>
+                    <canvas id="canvas" height="300" width="300"></canvas><br>
+                    <div id="canvas-label"></div>
                 </div> 
             </td>
             
@@ -68,10 +69,10 @@
                         </tr>
                         <tr><td class="form-text y-text" colspan="9">Значение y</td></tr>
                         <tr class="y-value-row">
-                            
-                            
-                            <td colspan="3">
-                                <input class="form-input y-input" placeholder="(-5 ... 3)">
+                                 
+                            <td colspan="3" id="y-elem">
+                                <input type="text" class="form-input y-input" placeholder="(-5 ... 3)">
+                                <div class="tool-helper"><div class="tool"></div></div>
                             </td>
                         </tr>
                         <tr><td class="form-text r-text" colspan="9">Значение R</td></tr>

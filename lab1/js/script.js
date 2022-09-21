@@ -8,6 +8,9 @@ const table = document.querySelector("#result-table");
 const submit = document.querySelector(".form-submit");
 const error_text = document.getElementById('text-error');
 const clear_button = document.querySelector('.clear');
+const tool = document.querySelector('.tool');
+const main_table = document.querySelector('.main-table');
+const graph_block = document.querySelector('.graph-block');
 
 
 
@@ -104,13 +107,53 @@ x_buttons.forEach(button => {
     })
 });
 
+
+function windowChecker(exp) {
+    function setBackground() {
+        tool.style.backgroundColor = '#3989c9';
+    }
+    if (exp >= 3) {
+        tool.innerHTML = 'Значение должно быть меньше, чем 3';
+        setBackground();
+        return;
+    }
+    if (exp <= -5) {
+        tool.innerHTML = 'Значение должно быть чольше, чем -5';
+        setBackground();
+        return;
+    }
+    if (isNaN(exp)) {
+        tool.innerHTML = 'Значение должно являться числом';
+        setBackground();
+        return;
+    }       
+    tool.style.backgroundColor = 'transparent';
+    tool.innerHTML = '';
+}
 y.onfocus = function() {
     selectText(y_text);
+    let exp = this.value;
+    windowChecker(exp);
+}
+
+y.oninput = function() {
+    let exp = this.value;
+    windowChecker(exp);
 }
 
 y.onblur = function() {
     blurText(y_text);
+    tool.style.backgroundColor = 'transparent';
+    tool.innerHTML = '';
 }
+
+
+
+
+//main prog
+
+const MAX_Y = 3;
+const MIN_Y = -5;
 
 clear_button.addEventListener("click", (event) => {
     event.preventDefault();
@@ -125,14 +168,21 @@ clear_button.addEventListener("click", (event) => {
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
             table.innerHTML = xhr.responseText;
-            console.log(xhr.responseText);
         }
     }
+
+    stat.x = undefined;
+    stat.y = undefined;
+    stat.r = undefined;
+    
+    x_buttons.forEach(button => {blurButton(button, x_text, stat.x)});
+    r_buttons.forEach(button => {blurButton(button, r_text, stat.r)});
+    y.value = '';
+    document.getElementById('canvas-label').innerHTML = '';
+    drawCanvas(ctx, stat.x, stat.y, stat.r);
 })
 
-const MAX_Y = 3;
-const MIN_Y = -5;
-//main prog
+
 function xChecker() {
     if (stat.x == undefined) {
         return false;
@@ -140,8 +190,25 @@ function xChecker() {
     return true;
 }
 
+function cutter(elem) {
+    elem = elem.replace(/^0+/,'0').replace(/0+$/,'0');
+        if(elem != '0') {
+            elem = elem.replace(/^0+/,'').replace(/0+$/,'');
+            elem = elem.replace(/^\./,'0.').replace(/\.$/,'');
+        }
+    return elem;
+}
+
 function yChecker(yval) {
     let numeric = yval.replace(',', '.');
+    
+    
+    if (numeric.length > 10) {
+        error_text.innerHTML = 'Y должен быть не длиннее 10 символов';
+        error_text.style.color = 'red';
+        return false;
+    }
+
     if (isNaN(numeric) || numeric === '') {
         error_text.innerHTML = 'Y должен быть числом';
         error_text.style.color = 'red';
@@ -151,7 +218,33 @@ function yChecker(yval) {
         error_text.style.color = 'red';
         return false;
     }
+    if (numeric.includes('e-')) {
+        let arr = numeric.split('e-');
+        arr[0] = arr[0].replace(/^0+/,'0');
+        arr[1] = arr[1].replace(/^0+/,'0');
+        if (arr[0] != 0) {
+            arr[0] = arr[0].replace(/^0+/,'');
+        }
+        if (arr[1] != 0) {
+            arr[1] = arr[1].replace(/^0+/,'');
+        }
+        numeric = arr[0] + 'e-' + arr[1];
+    } else if(numeric.includes('e+')) {
+        let arr = numeric.split('e+');
+        arr[0] = arr[0].replace(/^0+/,'0');
+        arr[1] = arr[1].replace(/^0+/,'0');
+        if (arr[0] != 0) {
+            arr[0] = arr[0].replace(/^0+/,'');
+        }
+        if (arr[1] != 0) {
+            arr[1] = arr[1].replace(/^0+/,'');
+        }
+        numeric = arr[0] + 'e+' + arr[1];
+    } else {
+        numeric = cutter(numeric);
+    }
     error_text.style.color = '#272727';
+    error_text.innerHTML = '';
     stat.y = numeric;
     return true;
 }
@@ -173,7 +266,7 @@ document.forms.form.onsubmit = function(event) {
     
     if (validateData(y.value)) {
         let xhr = new XMLHttpRequest();
-        xhr.open('POST', 'php/php.php');
+        xhr.open('POST', 'php/main.php');
         xhr.setRequestHeader('Content-Type',
         'application/x-www-form-urlencoded');
         let request = 'x=' + encodeURIComponent(stat.x);;
@@ -193,6 +286,11 @@ document.forms.form.onsubmit = function(event) {
                                 
             }
         }
+    } else {
+        if (!(xChecker() && rChecker())) {
+            error_text.innerHTML = 'Заполните форму';
+            error_text.style.color = 'red';
+        }
     }
 }
 
@@ -206,7 +304,25 @@ document.addEventListener("DOMContentLoaded", function() {
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
             table.innerHTML = xhr.responseText;
-            console.log(xhr.responseText);
+        }
+    }
+    let graph = new XMLHttpRequest();
+    graph.open('POST', 'php/canvas.php');
+    graph.setRequestHeader('Content-Type',
+    'application/x-www-form-urlencoded');
+    graph.send();
+    graph.onreadystatechange = function() {
+        if (graph.readyState === 4 && graph.status === 200) {
+            if (graph.responseText != '') {
+                let canvas_data = JSON.parse(graph.responseText);
+                stat.x = canvas_data.x;
+                stat.y = canvas_data.y;
+                stat.r = canvas_data.r;
+            }
+            drawCanvas(ctx, stat.x, stat.y, stat.r);
+            stat.x = undefined;
+            stat.y = undefined;
+            stat.r = undefined;
         }
     }
 })
@@ -253,14 +369,20 @@ function arrow(ctx, fromX, fromY, toX, toY) {
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext('2d');
-const canvasHeight = canvas.height;
-const canvasWidth = canvas.width;
-const xCenter = canvasWidth/2;
-const yCenter = canvasHeight/2;
-const rTo = 50;
-const halfRTO = 100;
-const defaultMargin = 5;
-
+let canvasHeight;
+let canvasWidth;
+let xCenter;
+let yCenter;
+let rTo;
+let halfRTO;
+let defaultMargin;
+canvasHeight = canvas.height;
+canvasWidth = canvas.width;
+xCenter = canvasWidth/2;
+yCenter = canvasHeight/2;
+rTo = canvasWidth/6;
+halfRTO = canvasWidth/3;
+defaultMargin = 5;
 function drawCanvas(ctx, x, y, r) {
     ctx.strokeStyle = '#2196f3';
     ctx.clearRect(0, 0, canvasHeight, canvasWidth);
@@ -270,7 +392,7 @@ function drawCanvas(ctx, x, y, r) {
     ctx.stroke();
     ctx.closePath();
 
-    ctx.font = '14px Arial';
+    ctx.font = `${canvasWidth/25}px Arial`;
     ctx.textAlign = 'right';
     ctx.fillStyle = 'white';
     ctx.textBaseline = 'bottom';
@@ -317,7 +439,7 @@ function drawCanvas(ctx, x, y, r) {
             yCenter - y/r*halfRTO >= canvasHeight - defaultMargin ||
             yCenter - y/r*halfRTO <= defaultMargin) {
                 
-                document.getElementById("canvas-label").style.color = 'red';
+                document.getElementById("canvas-label").innerHTML = "Точка вне canvas'а";
         } else {
             ctx.fillStyle = 'red';
             ctx.fillRect(xCenter + x/r*halfRTO, yCenter - y/r*halfRTO, 3, 3);
@@ -332,7 +454,7 @@ function drawCanvas(ctx, x, y, r) {
                 ctx.textAlign = 'left';
             }
             ctx.fillText(`(x: ${x}; y: ${y})`, xCenter + x/r*halfRTO, yCenter - y/r*halfRTO);
-            document.getElementById("canvas-label").style.color = '#272727';
+            document.getElementById("canvas-label").innerHTML = '';
         }
         
     }
@@ -341,7 +463,14 @@ function drawCanvas(ctx, x, y, r) {
 }
 
 
-drawCanvas(ctx, stat.x, stat.y, stat.r);
+
+
+        
+
+
+
+
+
 
 
 
