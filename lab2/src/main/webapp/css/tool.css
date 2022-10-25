@@ -1,0 +1,16 @@
+.tool-helper {
+    position: relative;
+}
+
+.tool {
+    position: absolute;
+    width: 100%;
+    font-size: 12px;
+    left: 1em;
+    top: 1em;
+    padding: 0.5em;
+    pointer-events: none;
+    transition: 0.3s;
+}
+
+
