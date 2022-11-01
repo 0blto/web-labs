@@ -9,8 +9,13 @@ public class SentData {
     boolean byClick;
     boolean clear;
     boolean dots;
+    String canvas;
 
     public SentData() {
+    }
+
+    public String getCanvas() {
+        return canvas;
     }
 
     public boolean isDots() {

@@ -2,6 +2,7 @@ const canvas = document.getElementById("canvas")
 const ctx = canvas.getContext('2d')
 canvas.style.cursor = "pointer"
 
+
 const cur_pos = {
     x: 0,
     y: 0
@@ -89,7 +90,7 @@ function mark() {
 function drawCanvas() {
     //lines
 
-    ctx.clearRect(0, 0, canvasHeight, canvasWidth)
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight)
     arrow(xCenter, canvasHeight, xCenter, 0)
     arrow(0, yCenter, canvasWidth, yCenter)
     mark()
@@ -108,7 +109,7 @@ function drawCanvas() {
     circle('#2196f3')
 }
 
-drawCanvas()
+
 
 function dot(x, y) {
     let xVal = -(xCenter - x)
@@ -135,7 +136,14 @@ function getCursorPosition(canvas, event) {
     return {x: x - 3.5 * defaultMargin, y: y - 3.5 * defaultMargin}
 }
 
-
+function drawImage(src) {
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight)
+    let image = new Image(canvasHeight, canvasWidth)
+    image.src = src
+    image.onload = function () {
+        ctx.drawImage(image, 0, 0)
+    }
+}
 
 canvas.addEventListener("click", (event) => {
     if (rChecker()) {
@@ -143,16 +151,16 @@ canvas.addEventListener("click", (event) => {
         cur_pos.x = getCursorPosition(canvas, event).x
         cur_pos.y = getCursorPosition(canvas, event).y
         dot(cur_pos.x, cur_pos.y)
+
         requestData({
             byClick: true,
             x: (cur_pos.x - xCenter) * stat.r / halfRTO, // x * halfRTO / stat.r + xCenter
             y: (yCenter - cur_pos.y) * stat.r / halfRTO, // -(y * halfRTO / stat.r - yCenter)
             r: stat.r,
-            realX: cur_pos.x,
-            realY: cur_pos.y
+            canvas: canvas.toDataURL()
         })
     } else {
-        document.getElementById("canvas-label").innerHTML = 'Необходимо задать значение r';
+        document.getElementById("canvas-label").innerHTML = 'Необходимо задать значение r'
         document.getElementById("canvas-label").style.color = "red"
     }
 })

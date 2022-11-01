@@ -1,5 +1,6 @@
 package com.example.lab2;
 
+import com.example.lab2.util.Variables;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -26,12 +27,12 @@ public class ControllerServlet extends HttpServlet {
     }
 
     private void initContext() {
-        if (this.getServletContext().getAttribute("results") == null) {
-            this.getServletContext().setAttribute("results", "");
+        if (this.getServletContext().getAttribute(Variables.TABLE_NAME) == null) {
+            this.getServletContext().setAttribute(Variables.TABLE_NAME, "");
         }
 
-        if (this.getServletContext().getAttribute("dots") == null) {
-            this.getServletContext().setAttribute("dots", "");
+        if (this.getServletContext().getAttribute(Variables.DOTS_NAME) == null) {
+            this.getServletContext().setAttribute(Variables.DOTS_NAME, "");
         }
 
     }

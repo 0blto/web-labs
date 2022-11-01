@@ -25,11 +25,10 @@ function requestDots() {
     })
         .then(response => response.text())
         .then(text => {
-            let dots = text.split(", ")
-            if (dots.length !== 0) {
-                for (let i = -2; i < dots.length; i += 2) {
-                    dot(dots[i], dots[i + 1])
-                }
+            if (!text.startsWith('data')) {
+                drawCanvas()
+            } else {
+                drawImage(text)
             }
         })
 

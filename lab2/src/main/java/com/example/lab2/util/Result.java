@@ -21,7 +21,7 @@ public class Result {
         this.r = r;
         this.isHit = isHit;
     }
-
+    //-1.0-SNAPSHOT
     public String toHTML() {
         return "<tr><td>" +
                 (this.isByClick() ? "Канвас" : "Форма") +

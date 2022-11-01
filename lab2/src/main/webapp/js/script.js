@@ -149,8 +149,7 @@ document.forms.form.onsubmit = function(event) {
             x: stat.x,
             y: stat.y,
             r: stat.r,
-            realX: stat.x * halfRTO / stat.r + xCenter,
-            realY: -(stat.y * halfRTO / stat.r - yCenter)
+            canvas: canvas.toDataURL()
         })
     } else {
         if (!(xChecker() && rChecker())) {

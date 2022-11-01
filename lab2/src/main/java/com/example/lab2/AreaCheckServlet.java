@@ -27,18 +27,18 @@ public class AreaCheckServlet extends HttpServlet {
         if (sentData == null) {
             response.getWriter().println("Данные некоректны");
         } else if (sentData.isClear()) {
-            this.getServletContext().setAttribute("results", "");
-            this.getServletContext().setAttribute("dots", "");
+            this.getServletContext().setAttribute(Variables.TABLE_NAME, "");
+            this.getServletContext().setAttribute(Variables.DOTS_NAME, "");
         } else {
             if (sentData.isDots()) {
-                response.getWriter().println(this.getServletContext().getAttribute("dots"));
+                response.getWriter().println(this.getServletContext().getAttribute(Variables.DOTS_NAME));
             }
 
             if (this.validateData(sentData)) {
                 Result result = new Result(LocalDateTime.now(), (int)(System.nanoTime() - time), sentData.getX(), sentData.getY(), sentData.getR(), this.isHit(sentData.getX(), sentData.getY(), sentData.getR()) ? "Попадание" : "Промах", sentData.isByClick());
-                this.getServletContext().setAttribute("results", this.getServletContext().getAttribute("results") + result.toHTML());
-                this.getServletContext().setAttribute("dots", this.getServletContext().getAttribute("dots") + String.valueOf(sentData.getRealX()) + ", " + sentData.getRealY() + ", ");
-                response.getWriter().println(this.getServletContext().getAttribute("results"));
+                this.getServletContext().setAttribute(Variables.TABLE_NAME, this.getServletContext().getAttribute(Variables.TABLE_NAME) + result.toHTML());
+                this.getServletContext().setAttribute(Variables.DOTS_NAME, sentData.getCanvas());
+                response.getWriter().println(this.getServletContext().getAttribute(Variables.TABLE_NAME));
             }
         }
     }
@@ -56,7 +56,7 @@ public class AreaCheckServlet extends HttpServlet {
     }
 
     private boolean checkY(double y) {
-        return y > -3.0 && y < 5.0;
+        return y > Variables.MIN_Y && y < Variables.MAX_Y;
     }
 
     private boolean checkR(double r) {
