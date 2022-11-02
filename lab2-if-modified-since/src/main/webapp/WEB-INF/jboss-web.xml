@@ -1,0 +1,3 @@
+<jboss-web>
+    <context-root>lab2-if-modified-since</context-root>
+</jboss-web>
