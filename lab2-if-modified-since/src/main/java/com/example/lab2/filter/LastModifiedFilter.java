@@ -33,7 +33,6 @@ public class LastModifiedFilter implements Filter {
                 ZonedDateTime zdt = ZonedDateTime.parse(((HttpServletRequest) request).getHeader("If-Modified-Since"), DateTimeFormatter.RFC_1123_DATE_TIME);
                 if (zdt.compareTo(ZonedDateTime.parse(request.getServletContext().getAttribute(Variables.LAST_MODIFIED).toString())) > 0) {
                     resp.setStatus(304);
-                    resp.getWriter().println("Not Modified");
                     return;
                 }
             }
