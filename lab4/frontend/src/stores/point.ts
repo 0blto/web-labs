@@ -8,23 +8,6 @@ export const usePointStore = defineStore({
     id: 'point',
     state: () => {
         return {
-            /*
-            x: localStorage.getItem('lastResp') ?
-             JSON.parse(localStorage.getItem('lastResp')!).x :
-              '-',
-              y: localStorage.getItem('lastResp') ?
-             JSON.parse(localStorage.getItem('lastResp')!).y :
-              '-',
-              r: localStorage.getItem('lastResp') ?
-             JSON.parse(localStorage.getItem('lastr')!) :
-              '-',
-              time: localStorage.getItem('lastResp') ?
-             JSON.parse(localStorage.getItem('lastResp')!).time :
-              '-',
-              res: localStorage.getItem('lastResp') ?
-             JSON.parse(localStorage.getItem('lastResp')!).answer :
-              '-'
-        */
             x: '',
             y: '',
             r: '',
