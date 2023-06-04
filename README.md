@@ -55,6 +55,7 @@
 Разработанное веб-приложение необходимо развернуть на сервере WildFly. Сервер должен быть запущен в standalone-конфигурации, порты должны быть настроены в соответствии с выданным portbase, доступ к http listener'у должен быть открыт для всех IP.
 <h3>lab3</h3>
 JSF
+Hibernate JPA
 <h3>lab4</h3>
 Frontend - Vue</br>
 Backend - Spring</br><br>
