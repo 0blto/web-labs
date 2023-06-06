@@ -1,0 +1,122 @@
+.part_app {
+    width: 70%;
+    margin: 2em auto;
+    background-color: rgb(44, 44, 44);
+    padding: 2em;
+}
+
+.field {
+    margin: 1em auto;
+}
+
+.scrollable {
+    height: 50vh;
+    position: relative;
+    overflow-x: auto;
+    overflow-y: scroll;
+}
+
+#result-table {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+}
+
+
+
+#result-table tr {
+    border: 2px solid rgb(29, 29, 29);
+    transition: all .3s;
+}
+
+#result-table th {
+    position: sticky;
+    top: -2em;
+    background-color: rgb(44, 44, 44);
+}
+
+#result-table th, #result-table td {
+    text-align: center;
+    padding: 1em;
+    height: 3em;
+    max-height: 3em;
+}
+
+.label {
+    font-size: 3vh;
+    min-font-size: 12px;
+}
+
+.input {
+    min-font-size: 12px;
+    font-size: 2vh;
+    height: 3vh;
+    min-height: 16px;
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    border-bottom: yellow solid 2px;
+    color: yellow;
+}
+
+.input:focus {
+    outline: none;
+    border-color: orange;
+    color: orange;
+    transition: 0.3s;
+}
+
+.ui-selectonemenu.r-value {
+    background-color: rgb(29, 29, 29); !important;
+    border: 2px solid yellow; !important;
+    border-radius: 0; !important;
+    color: yellow; !important;
+}
+
+.ui-selectonemenu.r-value:hover {
+    border: 2px solid orange; !important;
+}
+
+.ui-selectonemenu-label {
+    font-size: 2vh; !important;
+    color: yellow; !important;
+}
+
+
+.ui-selectonemenu-items {
+    border: 2px solid yellow; !important;
+    padding: 1vh; !important;
+    background: rgb(29, 29, 29); !important;
+    color: orange; !important;
+}
+
+.ui-selectonemenu-item {
+    color: yellow; !important;
+}
+
+.ui-inputfield {
+    outline: medium none;
+}
+
+.msg {
+    color: red;
+}
+
+.xvals {
+    margin: auto;
+    width: 50%;
+    display: flex;
+    justify-content: space-around;
+}
+
+
+
+
+
+
+
+
+
+
+

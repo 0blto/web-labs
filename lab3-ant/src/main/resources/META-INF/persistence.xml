@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
+
+    <persistence-unit name="database">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>com.insane.lab3.util.Point</class>
+        <properties>
+            <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/studs"/>
+            <property name="jakarta.persistence.jdbc.user" value="s339112"/>
+            <property name="jakarta.persistence.jdbc.password" value="pYkfvoy4gMaC7pyQ"/>
+            <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>
+        </properties>
+    </persistence-unit>
+</persistence>

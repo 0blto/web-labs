@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="lab3">
+
+    <property file="build.properties"/>
+
+    <taskdef resource="net/sf/antcontrib/antlib.xml">
+        <classpath>
+            <pathelement location="antlib/ant-contrib-1.0b3.jar"/>
+        </classpath>
+    </taskdef>
+
+    <taskdef resource="net/sf/antcontrib/antlib.xml">
+        <classpath>
+            <pathelement location="antlib/ant-jsch-1.10.13.jar"/>
+        </classpath>
+    </taskdef>
+
+    <path id="lib.main.path">
+        <fileset dir="${lib.main.dir}" includes="**/*.jar"/>
+    </path>
+
+    <path id="lib.test.path">
+        <path refid="lib.main.path"/>
+        <fileset dir="${lib.test.dir}" includes="**/*.jar"/>
+    </path>
+
+    <target name="compile" description="Компиляция">
+        <property name="src_dir" value="${src.main.dir}"/>
+        <echo>Compiling project code</echo>
+        <mkdir dir="${build.classes.dir}"/>
+        <javac srcdir="${src_dir}"
+               destdir="${build.classes.dir}"
+               includeantruntime="false">
+            <classpath refid="lib.main.path"/>
+        </javac>
+
+        <echo>Compiling tests</echo>
+        <mkdir dir="${test.dir}"/>
+        <javac srcdir="${src.test.dir}"
+               destdir="${test.dir}"
+               includeantruntime="false">
+            <classpath>
+                <path refid="lib.test.path"/>
+                <pathelement location="${build.classes.dir}"/>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="build" depends="compile" description="War creating">
+        <echo>Copying libs WEB-INF/lib...</echo>
+        <copy todir="${build.web-inf.lib}">
+            <path refid="lib.main.path"/>
+        </copy>
+
+        <echo>Files to WEB-INF...</echo>
+        <copy todir="${build.web-inf}">
+            <fileset dir="${src.main.web}/WEB-INF"/>
+        </copy>
+
+        <echo>Copying recourses...</echo>
+        <copy todir="${build.classes.dir}">
+            <fileset dir="${src.main.resources}"/>
+        </copy>
+
+        <echo>Copying files WEB-INF...</echo>
+        <copy todir="${build.dir}">
+            <fileset dir="${src.main.web}">
+                <exclude name="WEB-INF/**"/>
+            </fileset>
+        </copy>
+
+        <echo>Creating war-archive...</echo>
+        <property name="war" value="${build.dir}/${ant.project.name}.war"/>
+        <war destfile="${war}">
+            <fileset dir="${build.dir}"/>
+        </war>
+    </target>
+
+    <target name="music" description="Sounds">
+        <sound>
+            <success source="${music.success.file}"/>
+            <fail source="${music.fail.file}"/>
+        </sound>
+        <antcall target="build"/>
+        <echo>Sound exec...</echo>
+    </target>
+
+    <target name="test" depends="build" description="Testing">
+        <echo>Creating directory</echo>
+        <mkdir dir="${test.report.dir}"/>
+        <echo>Testing...</echo>
+        <junitlauncher printsummary="true" haltonfailure="true">
+            <classpath>
+                <path refid="lib.test.path"/>
+                <pathelement location="${build.dir}"/>
+                <pathelement location="${build.classes.dir}"/>
+                <pathelement location="${test.dir}"/>
+            </classpath>
+
+            <testclasses outputdir="${test.report.dir}">
+                <fileset dir="${test.dir}">
+                    <include name="**/*Test*.class"/>
+                </fileset>
+                <listener type="legacy-plain"
+                          sendSysOut="true"
+                          sendSysErr="true"/>
+                <fork/>
+            </testclasses>
+        </junitlauncher>
+    </target>
+
+    <target name="clean" description="Cleaning">
+        <echo>Cleaning</echo>
+        <delete dir="${build.dir}"/>
+        <delete dir="${test.dir}"/>
+        <delete dir="${doc.dir}"/>
+        <delete dir="${native2ascii.resources}"/>
+    </target>
+
+    <target name="alt" description="Создание версии программы с измененными именами переменных и классов по указанному регулярному выражению">
+        <echo>Temp directory creating...</echo>
+        <tempfile property="temp.dir" destdir="${java.io.tmpdir}" prefix="ant"/>
+        <copy todir="${temp.dir}">
+            <fileset dir="${src.main.dir}" includes="**/*.java"/>
+        </copy>
+
+        <echo>Changing...</echo>
+        <replaceregexp match="${alt.regex}"
+                       flags="${alt.regex.flags}"
+                       replace="${alt.replace}">
+            <fileset dir="${temp.dir}" includes="**/*.java"/>
+        </replaceregexp>
+
+        <echo>Building...</echo>
+        <antcall target="build">
+            <param name="src_dir" value="${temp.dir}"/>
+            <param name="war" value="${build.dir}/${ant.project.name}-Alt.war"/>
+        </antcall>
+    </target>
+
+    <target name="native2ascii" description="native2ascii translation">
+        <native2ascii src="${src.main.resources}"
+                      dest="${native2ascii.resources}"
+                      includes="**/*.properties"/>
+    </target>
+
+    <target name="scp" depends="build" description="Packaging and sending by scp">
+        <input message="Give me ur password: " addproperty="scp.password">
+            <handler type="secure"/>
+        </input>
+
+        <trycatch>
+            <try>
+                <echo>Connection and sending war-archive...</echo>
+                <scp file="${build.dir}/${ant.project.name}.war"
+                     todir="${scp.user}@${scp.host}:${scp.dir}"
+                     password="${scp.password}"
+                     port="${scp.port}"
+                     trust="true"/>
+            </try>
+            <catch>
+                <fail message="Unable to connect."/>
+            </catch>
+        </trycatch>
+
+    </target>
+
+</project>
