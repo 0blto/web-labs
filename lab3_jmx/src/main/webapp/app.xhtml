@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<f:view>
+    <ui:composition template="templates/template.xhtml">
+        <ui:define name="head">
+            <h:outputStylesheet library="css" name="app.css" />
+            <h:outputScript library="js" name="graph.js" />
+        </ui:define>
+        <ui:define name="main">
+                <h:panelGroup id="canvas-script">
+                    <h:outputScript>
+                        setTimeout(() => {
+                            update_radius(PF('foo').getSelectedValue(), JSON.parse(JSON.stringify(#{resultsBean.jsonData()})))
+                        }, 0)
+                        document.addEventListener("DOMContentLoaded", () => {
+
+                        setTimeout(() => {
+                        update_radius(PF('foo').getSelectedValue(), JSON.parse(JSON.stringify(#{resultsBean.jsonData()})))
+                        }, 0)
+                        })
+
+                    </h:outputScript>
+                </h:panelGroup>
+                <div class="plot part_app">
+                    <canvas></canvas>
+                </div>
+                <div class="form part_app">
+                    <h:form id="point-form">
+                        <div class="field">
+                            <h:outputLabel styleClass="label" value="X value" /> <br/> <br/>
+
+
+                            <div class="xvals">
+
+                                <div class="xbut">
+                                    <h:selectBooleanCheckbox id="x_-5" value="#{mainBean.x1}" styleClass="x-value" name="x-5" valueChangeListener="#{mainBean.xChange}" /> <br/>
+                                    <h:outputLabel value="-5" />
+                                </div>
+                                <div class="xbut">
+                                    <h:selectBooleanCheckbox id="x_-4" value="#{mainBean.x2}" styleClass="x-value" name="x-4" valueChangeListener="#{mainBean.xChange}" /> <br/>
+                                    <h:outputLabel value="-4" />
+                                </div>
+                                <div class="xbut">
+                                    <h:selectBooleanCheckbox id="x_-3" value="#{mainBean.x3}" styleClass="x-value" name="x-3" valueChangeListener="#{mainBean.xChange}" /> <br/>
+                                    <h:outputLabel value="-3" />
+                                </div>
+                                <div class="xbut">
+                                    <h:selectBooleanCheckbox id="x_-2" value="#{mainBean.x4}" styleClass="x-value" name="x-2" valueChangeListener="#{mainBean.xChange}" /> <br/>
+                                    <h:outputLabel value="-2" />
+                                </div>
+                                <div class="xbut">
+                                    <h:selectBooleanCheckbox id="x_-1" value="#{mainBean.x5}" styleClass="x-value" name="x-1" valueChangeListener="#{mainBean.xChange}" /> <br/>
+                                    <h:outputLabel value="-1" />
+                                </div>
+                                <div class="xbut">
+                                    <h:selectBooleanCheckbox id="x_0" value="#{mainBean.x6}" styleClass="x-value" name="x0" valueChangeListener="#{mainBean.xChange}" /><br/>
+                                    <h:outputLabel value="0" />
+                                </div>
+                                <div class="xbut">
+                                    <h:selectBooleanCheckbox id="x_1" value="#{mainBean.x7}" styleClass="x-value" name="x1" valueChangeListener="#{mainBean.xChange}" /> <br/>
+                                    <h:outputLabel value="1" />
+                                </div>
+
+                            </div>
+                            <h:outputLabel id="x-msg" styleClass="msg" />
+                        </div>
+                            <div class="field">
+                                <h:outputLabel styleClass="label" value="Y value" /> <br/> <br/>
+                                <h:inputText styleClass="input" id="y-input" label="X value" value="#{mainBean.selectedYItem}"
+                                             required="true" converter="jakarta.faces.Double" converterMessage="Значение должно являться числом"
+                                             validatorMessage="Допустимй диапазон [-3; 3]"
+                                             requiredMessage="Данное поле обязательно" maxlength="10">
+                                    <f:validateDoubleRange minimum="-3" maximum="3" />
+                                </h:inputText><br/> <br/>
+                                <h:message for="y-input" styleClass="msg" id="y-msg" />
+                            </div>
+                        <div class="field">
+                            <h:outputLabel styleClass="label" for="r-value" value="R value" /> <br/> <br/>
+                            <p:selectOneMenu styleClass="r-value" widgetVar="foo" id="r-value" value="#{mainBean.selectedRItem}" required="true"
+                                             requiredMessage="Данное поле обязательно">
+                                <f:selectItems value="#{mainBean.itemsR}"/>
+                                <p:ajax event="itemSelect" update="canvas-script" />
+                            </p:selectOneMenu> <br/> <br/>
+                            <h:message for="r-value" styleClass="msg" id="r-msg" />
+                        </div>
+                        <div class="field">
+                            <h:commandButton styleClass="def-button" id="sumbit" value="Отправить"
+                                             action="#{mainBean.newRequest()}" onclick="form_dot()">
+                                <f:ajax execute="@form" render="y-msg r-msg result-table" />
+                            </h:commandButton>
+                        </div>
+                    </h:form>
+
+                </div>
+                <div class="scrollable part_app">
+                    <h:dataTable id="result-table" value="#{resultsBean.results}" var="r">
+                        <h:column>
+                            <f:facet name="header">ID</f:facet>
+                            #{r.id}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">X</f:facet>
+                            #{r.x}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Y</f:facet>
+                            #{r.y}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">R</f:facet>
+                            #{r.r}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Результат</f:facet>
+                            #{r.isHit}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Текущее время</f:facet>
+                            #{r.now}
+                        </h:column>
+                    </h:dataTable>
+                </div>
+
+            <p:remoteCommand name="canvasResult" action="#{mainBean.newCanvasRequest()}" update="point-form:r-msg result-table" />
+        </ui:define>
+    </ui:composition>
+</f:view>
+</html>
